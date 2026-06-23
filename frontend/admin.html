@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Player of the Week</title>
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Player of the Week - Admin</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="archive.html">Archive</a>
+            <a href="admin.html">Admin</a>
+        </nav>
+    </header>
+    
+    <main id="main-content">
+        <!-- Login Section -->
+        <div id="login-section">
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="admin-username">Username:</label>
+                    <input type="text" id="admin-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-password">Password:</label>
+                    <input type="password" id="admin-password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+            <div id="login-message"></div>
+        </div>
+
+        <!-- Post Creation Section (hidden until logged in) -->
+        <div id="post-section" style="display: none;">
+            <div id="admin-header">
+                <h2>Create New Post</h2>
+                <button id="logout-button" type="button">Logout</button>
+            </div>
+            
+            <form id="post-form">
+            <div class="form-group">
+                <label for="player-name">Player Name:</label>
+                <input type="text" id="player-name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="slug">Slug (URL-friendly):</label>
+                <input type="text" id="slug" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="week-date">Week Date:</label>
+                <input type="date" id="week-date" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="video-file">Video File:</label>
+                <input type="file" id="video-file" accept="video/*" required>
+                <p id="video-upload-status"></p>
+            </div>
+            
+            <div class="form-group">
+                <label for="thumbnail-file">Thumbnail (optional):</label>
+                <input type="file" id="thumbnail-file" accept="image/*">
+                <p id="thumbnail-upload-status"></p>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Article Content:</label>
+                <textarea id="content" rows="15" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="tags">Tags (comma-separated):</label>
+                <input type="text" id="tags" placeholder="midfielder, champions-league, goals">
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="featured">
+                    Featured Post
+                </label>
+            </div>
+            
+            <button type="submit">Create Post</button>
+        </form>
+        
+        <div id="message"></div>
+        </div>
+    </main>
+    
+    <script src="src/js/app.js"></script>
+    <script src="src/js/admin.js"></script>
+</body>
+</html>

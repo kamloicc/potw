@@ -1,0 +1,290 @@
+/* Ultra-minimal classic styling */
+/* NO backgrounds, NO gradients, NO shadows, NO cards */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
+    background-color: #fff;
+    line-height: 1.6;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Header */
+header {
+    border-bottom: 2px solid #000;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+nav {
+    margin-top: 15px;
+}
+
+nav a {
+    color: #000;
+    text-decoration: none;
+    margin-right: 20px;
+    font-size: 16px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Main Content */
+main {
+    margin-top: 40px;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+/* Video Container */
+#video-container {
+    margin-bottom: 30px;
+}
+
+#video-player {
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #000;
+}
+
+/* Post Details */
+#post-details {
+    margin-bottom: 40px;
+}
+
+#player-name {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#post-title {
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+#week-date {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+#post-content-text {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+#post-content-text p {
+    margin-bottom: 15px;
+}
+
+/* Navigation Buttons */
+#navigation {
+    border-top: 1px solid #000;
+    padding-top: 20px;
+    margin-top: 40px;
+}
+
+button {
+    background: none;
+    border: 2px solid #000;
+    color: #000;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+button:disabled {
+    border-color: #ccc;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+button:disabled:hover {
+    background: none;
+    color: #ccc;
+}
+
+/* Archive Page */
+#archive-list {
+    margin-top: 30px;
+}
+
+.archive-item {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+}
+
+.archive-item a {
+    color: #000;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+}
+
+.archive-item a:hover {
+    text-decoration: underline;
+}
+
+.archive-item .player-name {
+    font-weight: bold;
+}
+
+.archive-item .week-date {
+    font-size: 14px;
+    color: #666;
+    margin-left: 10px;
+}
+
+/* Search */
+#search-container {
+    margin-bottom: 30px;
+}
+
+#search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Admin Form */
+form {
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+input[type="text"],
+input[type="date"],
+textarea {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input[type="file"] {
+    font-size: 14px;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Messages */
+#message,
+#video-upload-status,
+#thumbnail-upload-status {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+/* Loading */
+#loading {
+    font-size: 18px;
+    padding: 40px 0;
+}
+
+/* Simple, clean layout */
+article {
+    max-width: 100%;
+}
+
+/* Admin Login Section */
+#login-section {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    border: 2px solid #000;
+}
+
+#login-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#login-message {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Admin Header with Logout */
+#admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #000;
+}
+
+#admin-header h2 {
+    margin: 0;
+}
+
+#logout-button {
+    padding: 8px 16px;
+    font-size: 14px;
+}

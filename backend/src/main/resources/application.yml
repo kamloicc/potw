@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: player-of-the-week
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/playeroftheweek}
+      database: playeroftheweek
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+server:
+  port: 8080
+
+minio:
+  url: ${MINIO_URL:http://localhost:9000}
+  public-url: ${MINIO_PUBLIC_URL:http://localhost/minio}
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin}
+  bucket-name: ${MINIO_BUCKET:player-videos}
+  presigned-url-expiry: 3600
+
+admin:
+  username: ${ADMIN_USERNAME:admin}
+  password: ${ADMIN_PASSWORD:admin123}
+
+logging:
+  level:
+    root: INFO
+    com.football.playeroftheweek: DEBUG
