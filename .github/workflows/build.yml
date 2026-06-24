@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*.*.*'
   pull_request:
     branches:
       - main
@@ -56,23 +58,68 @@ jobs:
         run: |
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+          
+          # Extract version from tag or use commit SHA
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            echo "is_release=true" >> $GITHUB_OUTPUT
+            
+            # Parse semantic version
+            if [[ $VERSION =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+              MAJOR="${BASH_REMATCH[1]}"
+              MINOR="${BASH_REMATCH[2]}"
+              PATCH="${BASH_REMATCH[3]}"
+              echo "major=${MAJOR}" >> $GITHUB_OUTPUT
+              echo "minor=${MINOR}" >> $GITHUB_OUTPUT
+              echo "patch=${PATCH}" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "version=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Build image with Buildpacks
         working-directory: ./backend
         run: |
-          pack build ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_short }} \
+          pack build ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }} \
             --builder paketobuildpacks/builder-jammy-base \
             --path . \
             --env BP_JVM_VERSION=21
 
-      - name: Tag as latest (main branch only)
-        if: github.ref == 'refs/heads/main'
+      - name: Tag release versions
+        if: steps.meta.outputs.is_release == 'true'
         run: |
-          docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_short }} ${{ env.IMAGE_NAME }}:latest
+          # Tag with full version (v1.2.3)
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }} ${{ env.IMAGE_NAME }}:v${{ steps.meta.outputs.version }}
+          
+          # Tag with major.minor (v1.2)
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }} ${{ env.IMAGE_NAME }}:v${{ steps.meta.outputs.major }}.${{ steps.meta.outputs.minor }}
+          
+          # Tag with major (v1)
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }} ${{ env.IMAGE_NAME }}:v${{ steps.meta.outputs.major }}
+          
+          # Tag as latest
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }} ${{ env.IMAGE_NAME }}:latest
 
-      - name: Push images
+      - name: Tag latest (main branch only, non-release)
+        if: github.ref == 'refs/heads/main' && steps.meta.outputs.is_release == 'false'
         run: |
-          docker push ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_short }}
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }} ${{ env.IMAGE_NAME }}:latest
+
+      - name: Push images (release)
+        if: steps.meta.outputs.is_release == 'true'
+        run: |
+          docker push ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+          docker push ${{ env.IMAGE_NAME }}:v${{ steps.meta.outputs.version }}
+          docker push ${{ env.IMAGE_NAME }}:v${{ steps.meta.outputs.major }}.${{ steps.meta.outputs.minor }}
+          docker push ${{ env.IMAGE_NAME }}:v${{ steps.meta.outputs.major }}
+          docker push ${{ env.IMAGE_NAME }}:latest
+
+      - name: Push images (non-release)
+        if: steps.meta.outputs.is_release == 'false'
+        run: |
+          docker push ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             docker push ${{ env.IMAGE_NAME }}:latest
           fi
