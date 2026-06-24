@@ -1,0 +1,78 @@
+name: Build and Push
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ghcr.io/kamloicc/potw
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run tests
+        working-directory: ./backend
+        run: mvn clean test
+
+      - name: Build JAR
+        working-directory: ./backend
+        run: mvn clean package -DskipTests
+
+      - name: Install Pack CLI
+        run: |
+          sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
+          sudo apt-get update
+          sudo apt-get install pack-cli
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+
+      - name: Build image with Buildpacks
+        working-directory: ./backend
+        run: |
+          pack build ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_short }} \
+            --builder paketobuildpacks/builder-jammy-base \
+            --path . \
+            --env BP_JVM_VERSION=21
+
+      - name: Tag as latest (main branch only)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker tag ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_short }} ${{ env.IMAGE_NAME }}:latest
+
+      - name: Push images
+        run: |
+          docker push ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_short }}
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            docker push ${{ env.IMAGE_NAME }}:latest
+          fi
