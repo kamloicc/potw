@@ -28,10 +28,7 @@ Football blog platform for showcasing weekly player highlights with video conten
 
 ## Architecture
 
-```
-Frontend (NGINX) → Backend (Spring Boot) → MongoDB
-                                        → MinIO
-```
+![Architecture Diagram](./architecture.png)
 
 ## Prerequisites
 
